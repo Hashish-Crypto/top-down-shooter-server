@@ -3,6 +3,8 @@
 Top-down shooter demonstration project using [Colyseus 0.14.0](https://www.colyseus.io/) and
 [Cocos Creator 3.4.2](https://www.cocos.com/en/creator).
 
+Live demo: [acquati.itch.io/top-down-shooter-client](https://acquati.itch.io/top-down-shooter-client)
+
 This project has been created using [⚔️ `create-colyseus-app`](https://github.com/colyseus/create-colyseus-app/) - an
 npm init template for kick starting a Colyseus project in TypeScript.
 
