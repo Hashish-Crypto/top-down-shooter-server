@@ -1,5 +1,6 @@
 import { Room, Client } from 'colyseus'
 import { State } from './schema/State'
+import { Player } from './schema/Player'
 
 export class MoonBase extends Room<State> {
   onCreate() {
@@ -9,7 +10,14 @@ export class MoonBase extends Room<State> {
   }
 
   onJoin(client: Client) {
-    this.state.players.set(client.sessionId, true)
+    this.state.players.set(
+      client.sessionId,
+      new Player().assign({
+        id: client.sessionId,
+        xPos: 0,
+        yPos: 0,
+      })
+    )
 
     // if (this.state.players.size === 10) {
     //   // lock this room for new users
