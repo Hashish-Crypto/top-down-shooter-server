@@ -2,14 +2,33 @@ import { Room, Client } from 'colyseus'
 import { State } from './schema/State'
 import { Player } from './schema/Player'
 
+interface IMovement {
+  id: string
+  move: string
+}
+
+interface IPosition {
+  xPos: number
+  yPos: number
+}
+
 export class MoonBase extends Room<State> {
   onCreate() {
     this.setState(new State())
-    this.onMessage('clientMovePlayer', (client, message) => this.serverMovePlayer(client, message))
+    this.onMessage<IMovement>('clientMovePlayer', (client, message) => this.serverMovePlayer(client, message))
+    this.onMessage<IPosition>('clientDeliverPlayerPosition', (client, message) => {
+      const player = this.state.players.get(client.id)
+      player.xPos = message.xPos
+      player.yPos = message.yPos
+    })
     console.log('Room Created!')
   }
 
   onJoin(client: Client) {
+    this.clients.forEach((value) => {
+      value.send('serverRequestPlayerPosition')
+    })
+
     this.state.players.set(
       client.sessionId,
       new Player().assign({
@@ -25,23 +44,23 @@ export class MoonBase extends Room<State> {
     // }
   }
 
-  serverMovePlayer(client: Client, data: any) {
-    if (data === 'moveUp') {
-      this.broadcast('serverMovePlayer', 'moveUp')
-    } else if (data === 'moveRight') {
-      this.broadcast('serverMovePlayer', 'moveRight')
-    } else if (data === 'moveDown') {
-      this.broadcast('serverMovePlayer', 'moveDown')
-    } else if (data === 'moveLeft') {
-      this.broadcast('serverMovePlayer', 'moveLeft')
-    } else if (data === 'idleUp') {
-      this.broadcast('serverMovePlayer', 'idleUp')
-    } else if (data === 'idleRight') {
-      this.broadcast('serverMovePlayer', 'idleRight')
-    } else if (data === 'idleDown') {
-      this.broadcast('serverMovePlayer', 'idleDown')
-    } else if (data === 'idleLeft') {
-      this.broadcast('serverMovePlayer', 'idleLeft')
+  serverMovePlayer(client: Client, data: IMovement) {
+    if (data.move === 'moveUp') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'moveUp' })
+    } else if (data.move === 'moveRight') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'moveRight' })
+    } else if (data.move === 'moveDown') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'moveDown' })
+    } else if (data.move === 'moveLeft') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'moveLeft' })
+    } else if (data.move === 'idleUp') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'idleUp' })
+    } else if (data.move === 'idleRight') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'idleRight' })
+    } else if (data.move === 'idleDown') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'idleDown' })
+    } else if (data.move === 'idleLeft') {
+      this.broadcast('serverMovePlayer', { id: data.id, move: 'idleLeft' })
     }
   }
 
