@@ -21,14 +21,11 @@ export class MoonBase extends Room<State> {
       player.xPos = message.xPos
       player.yPos = message.yPos
     })
+
     console.log('Room Created!')
   }
 
   onJoin(client: Client) {
-    this.clients.forEach((value) => {
-      value.send('serverRequestPlayerPosition')
-    })
-
     this.state.players.set(
       client.sessionId,
       new Player().assign({
@@ -38,10 +35,16 @@ export class MoonBase extends Room<State> {
       })
     )
 
+    this.clients.forEach((value) => {
+      value.send('serverRequestPlayerPosition')
+    })
+
     // if (this.state.players.size === 10) {
     //   // lock this room for new users
     //   this.lock()
     // }
+
+    console.log('Player ' + client.id + ' joined.')
   }
 
   serverMovePlayer(client: Client, data: IMovement) {
@@ -65,6 +68,9 @@ export class MoonBase extends Room<State> {
   }
 
   onLeave(client: Client) {
+    this.broadcast('playerLeaveRoom', { id: client.sessionId })
     this.state.players.delete(client.sessionId)
+
+    console.log('Player ' + client.id + ' leaved.')
   }
 }
