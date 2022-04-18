@@ -24,7 +24,7 @@ npm start
 ```
 git clone https://github.com/Hashish-Crypto/top-down-shooter-client.git
 cd top-down-shooter-client
-yarn install
+npm install
 ```
 
 Open Cocos Dashboard and add this project.
