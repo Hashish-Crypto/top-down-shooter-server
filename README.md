@@ -5,6 +5,8 @@ Top-down shooter demonstration project using [Colyseus 0.14.0](https://www.colys
 
 Live demo: [acquati.itch.io/top-down-shooter-client](https://acquati.itch.io/top-down-shooter-client)
 
+Move with "A,W,S,D" keyboard keys, with the on screen joystick or with a controller directional pad.
+
 This project has been created using [⚔️ `create-colyseus-app`](https://github.com/colyseus/create-colyseus-app/) - an
 npm init template for kick starting a Colyseus project in TypeScript.
 
