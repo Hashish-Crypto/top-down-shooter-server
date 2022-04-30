@@ -12,7 +12,7 @@ interface IPosition {
   yPos: number
 }
 
-export class MoonBase extends Room<State> {
+export class Bar extends Room<State> {
   onCreate() {
     this.setState(new State())
     this.onMessage<IMovement>('clientMovePlayer', (client, message) => this.serverMovePlayer(client, message))
@@ -22,7 +22,7 @@ export class MoonBase extends Room<State> {
       player.yPos = message.yPos
     })
 
-    console.log('MoonBase room created!')
+    console.log('Bar room created!')
   }
 
   onJoin(client: Client) {
@@ -44,7 +44,7 @@ export class MoonBase extends Room<State> {
     //   this.lock()
     // }
 
-    console.log('Player ' + client.id + ' joined MoonBase room.')
+    console.log('Player ' + client.id + ' joined Bar room.')
   }
 
   serverMovePlayer(client: Client, data: IMovement) {
@@ -71,6 +71,6 @@ export class MoonBase extends Room<State> {
     this.broadcast('playerLeaveRoom', { id: client.sessionId })
     this.state.players.delete(client.sessionId)
 
-    console.log('Player ' + client.id + ' leaved MoonBase room.')
+    console.log('Player ' + client.id + ' leaved Bar room.')
   }
 }
