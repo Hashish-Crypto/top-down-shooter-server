@@ -21,6 +21,7 @@ export class Bar extends Room<State> {
       player.xPos = message.xPos
       player.yPos = message.yPos
     })
+    this.onMessage('clientRemovePlayer', (client) => this.serverRemovePlayer(client))
 
     console.log('Bar room created!')
   }
@@ -47,6 +48,13 @@ export class Bar extends Room<State> {
     console.log('Player ' + client.id + ' joined Bar room.')
   }
 
+  onLeave(client: Client) {
+    this.broadcast('playerLeaveRoom', { id: client.sessionId })
+    this.state.players.delete(client.sessionId)
+
+    console.log('Player ' + client.id + ' leaved Bar room.')
+  }
+
   serverMovePlayer(client: Client, data: IMovement) {
     if (data.move === 'moveUp') {
       this.broadcast('serverMovePlayer', { id: data.id, move: 'moveUp' })
@@ -67,8 +75,8 @@ export class Bar extends Room<State> {
     }
   }
 
-  onLeave(client: Client) {
-    this.broadcast('playerLeaveRoom', { id: client.sessionId })
+  serverRemovePlayer(client: Client) {
+    this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
     this.state.players.delete(client.sessionId)
 
     console.log('Player ' + client.id + ' leaved Bar room.')
