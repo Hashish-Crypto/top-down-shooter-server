@@ -57,7 +57,6 @@ export class Bar extends Room<State> {
   }
 
   serverSetPlayerPosition(client: Client, data: IPosition) {
-    console.log('serverSetPlayerPosition:', data)
     const player = this.state.players.get(client.sessionId)
     player.xPos = data.xPos
     player.yPos = data.yPos
