@@ -15,12 +15,10 @@ interface IPosition {
 export class MoonBase extends Room<State> {
   onCreate() {
     this.setState(new State())
+    this.onMessage<IPosition>('clientDeliverPlayerPosition', (client, message) =>
+      this.serverSetPlayerPosition(client, message)
+    )
     this.onMessage<IMovement>('clientMovePlayer', (client, message) => this.serverMovePlayer(client, message))
-    this.onMessage<IPosition>('clientDeliverPlayerPosition', (client, message) => {
-      const player = this.state.players.get(client.id)
-      player.xPos = message.xPos
-      player.yPos = message.yPos
-    })
     this.onMessage('clientRemovePlayer', (client) => this.serverRemovePlayer(client))
 
     console.log('MoonBase room created!')
@@ -45,14 +43,24 @@ export class MoonBase extends Room<State> {
     //   this.lock()
     // }
 
-    console.log('Player ' + client.id + ' joined MoonBase room.')
+    console.log('Player ' + client.sessionId + ' joined MoonBase room.')
   }
 
   onLeave(client: Client) {
     this.broadcast('playerLeaveRoom', { id: client.sessionId })
     this.state.players.delete(client.sessionId)
+    console.log('Player ' + client.sessionId + ' leaved MoonBase room.')
+  }
 
-    console.log('Player ' + client.id + ' leaved MoonBase room.')
+  onDispose() {
+    console.log('MoonBase ' + this.roomId + ' disposing...')
+  }
+
+  serverSetPlayerPosition(client: Client, data: IPosition) {
+    console.log('serverSetPlayerPosition:', data)
+    const player = this.state.players.get(client.sessionId)
+    player.xPos = data.xPos
+    player.yPos = data.yPos
   }
 
   serverMovePlayer(client: Client, data: IMovement) {
@@ -76,9 +84,9 @@ export class MoonBase extends Room<State> {
   }
 
   serverRemovePlayer(client: Client) {
-    this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
-    this.state.players.delete(client.sessionId)
-
-    console.log('Player ' + client.id + ' leaved MoonBase room.')
+    // this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
+    // this.state.players.delete(client.sessionId)
+    // console.log('Player ' + client.sessionId + ' leaved MoonBase room.')
+    client.leave(1000)
   }
 }

@@ -29,5 +29,6 @@
     "temp/": true
   },
   "cSpell.words": ["Aabb", "ccclass", "Colyseus"],
-  "editor.foldingMaximumRegions": 50000
+  "editor.foldingMaximumRegions": 50000,
+  "files.eol": "\n"
 }

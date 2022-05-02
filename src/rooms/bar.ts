@@ -15,12 +15,10 @@ interface IPosition {
 export class Bar extends Room<State> {
   onCreate() {
     this.setState(new State())
+    this.onMessage<IPosition>('clientDeliverPlayerPosition', (client, message) =>
+      this.serverSetPlayerPosition(client, message)
+    )
     this.onMessage<IMovement>('clientMovePlayer', (client, message) => this.serverMovePlayer(client, message))
-    this.onMessage<IPosition>('clientDeliverPlayerPosition', (client, message) => {
-      const player = this.state.players.get(client.id)
-      player.xPos = message.xPos
-      player.yPos = message.yPos
-    })
     this.onMessage('clientRemovePlayer', (client) => this.serverRemovePlayer(client))
 
     console.log('Bar room created!')
@@ -45,14 +43,24 @@ export class Bar extends Room<State> {
     //   this.lock()
     // }
 
-    console.log('Player ' + client.id + ' joined Bar room.')
+    console.log('Player ' + client.sessionId + ' joined Bar room.')
   }
 
   onLeave(client: Client) {
     this.broadcast('playerLeaveRoom', { id: client.sessionId })
     this.state.players.delete(client.sessionId)
+    console.log('Player ' + client.sessionId + ' leaved Bar room.')
+  }
 
-    console.log('Player ' + client.id + ' leaved Bar room.')
+  onDispose() {
+    console.log('Bar ' + this.roomId + ' disposing...')
+  }
+
+  serverSetPlayerPosition(client: Client, data: IPosition) {
+    console.log('serverSetPlayerPosition:', data)
+    const player = this.state.players.get(client.sessionId)
+    player.xPos = data.xPos
+    player.yPos = data.yPos
   }
 
   serverMovePlayer(client: Client, data: IMovement) {
@@ -76,9 +84,9 @@ export class Bar extends Room<State> {
   }
 
   serverRemovePlayer(client: Client) {
-    this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
-    this.state.players.delete(client.sessionId)
-
-    console.log('Player ' + client.id + ' leaved Bar room.')
+    // this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
+    // this.state.players.delete(client.sessionId)
+    // console.log('Player ' + client.sessionId + ' leaved Bar room.')
+    client.leave(1000)
   }
 }
