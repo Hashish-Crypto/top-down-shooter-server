@@ -5,7 +5,9 @@ import { monitor } from '@colyseus/monitor'
  * Import your Room files
  */
 import { MoonBase } from './rooms/MoonBase'
+import { PoliceStation } from './rooms/PoliceStation'
 import { Bar } from './rooms/Bar'
+import { House } from './rooms/House'
 
 export default Arena({
   getId: () => 'Your Colyseus App',
@@ -15,7 +17,9 @@ export default Arena({
      * Define your room handlers:
      */
     gameServer.define('MoonBase', MoonBase)
+    gameServer.define('PoliceStation', PoliceStation)
     gameServer.define('Bar', Bar)
+    gameServer.define('House', House)
   },
 
   initializeExpress: (app) => {
