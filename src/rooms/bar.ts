@@ -83,9 +83,6 @@ export class Bar extends Room<State> {
   }
 
   serverRemovePlayer(client: Client) {
-    // this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
-    // this.state.players.delete(client.sessionId)
-    // console.log('Player ' + client.sessionId + ' leaved Bar room.')
     client.leave(1000)
   }
 }

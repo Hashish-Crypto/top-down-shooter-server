@@ -20,7 +20,7 @@ describe('testing your Colyseus app', () => {
 
   it('connecting into a room', async () => {
     // `room` is the server-side Room instance reference.
-    const room = await colyseus.createRoom<State>('moonBase', {})
+    const room = await colyseus.createRoom<State>('MoonBase', {})
 
     // `client1` is the client-side `Room` instance reference (same as JavaScript SDK)
     const client1 = await colyseus.connectTo(room)

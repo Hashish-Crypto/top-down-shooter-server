@@ -83,9 +83,6 @@ export class MoonBase extends Room<State> {
   }
 
   serverRemovePlayer(client: Client) {
-    // this.broadcast('playerLeaveRoom', { id: client.sessionId }, { except: client })
-    // this.state.players.delete(client.sessionId)
-    // console.log('Player ' + client.sessionId + ' leaved MoonBase room.')
     client.leave(1000)
   }
 }
